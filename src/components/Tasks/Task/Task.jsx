@@ -1,5 +1,5 @@
-import { STATE_COLORS } from "../../constants/common.constants";
-import { badgeColor, col } from "../../styles/global.styles";
+import { STATE_COLORS } from "../../../constants/common.constants";
+import { badgeColor, col } from "../../../styles/global.styles";
 import "./Task.css";
 
 const Task = () => {
