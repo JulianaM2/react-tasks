@@ -7,7 +7,7 @@ import { getLatestState } from "../../../helpers/task.helpers";
 import taskStore from "../../../store/task";
 
 const Task = () => {
-  const [taskState, setTaskState] = useState(taskStore.initialState);
+  const [, setTaskState] = useState(taskStore.initialState);
 
   useLayoutEffect(() => {
     taskStore.subscribe(setTaskState);
