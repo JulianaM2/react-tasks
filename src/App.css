@@ -1,7 +1,16 @@
 .App {
   height: 100vh;
+  overflow: hidden;
 }
 
 .app-body {
   padding: 1rem;
+}
+
+.app-row {
+  padding: 0;
+}
+
+.app-col {
+  margin-top: 0 !important;
 }

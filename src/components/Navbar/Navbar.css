@@ -1,0 +1,23 @@
+.navbar {
+  background-color: #d7c0ae;
+  height: 100vh;
+}
+
+.navbar a {
+  color: white;
+  width: 100%;
+  display: flex;
+  text-decoration: none;
+  padding: 10% 10% 0% 10%;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: fit-content;
+    width: 100%;
+  }
+
+  .navbar a {
+    padding: 2%;
+  }
+}
