@@ -6,7 +6,7 @@ const getLatestState = (states) =>
   });
 
 const getDateFromFullDateTime = (date) => {
-  const month = date.getUTCMonth() + 1; //months from 1-12
+  const month = date.getUTCMonth() + 1;
   const day = date.getUTCDate();
   const year = date.getUTCFullYear();
 

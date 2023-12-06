@@ -8,17 +8,18 @@ import taskStore from "../../../store/task";
 
 const Task = () => {
   const [, setTaskState] = useState(taskStore.initialState);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useLayoutEffect(() => {
     taskStore.subscribe(setTaskState);
     taskStore.init();
   }, []);
 
-  const location = useLocation();
-  const navigate = useNavigate();
 
   const { title, description, dueDate, stateHistory, notes, index } =
-    location.state;
+    location?.state ?? {};
 
   const state = useMemo(
     () => getLatestState(stateHistory).state,

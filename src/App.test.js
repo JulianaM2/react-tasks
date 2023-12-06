@@ -1,8 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders the navbar', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+  const addTaskNavbarOption = screen.getByText('Add task');
+  const listTasksNavbarOption = screen.getByText('List tasks');
+
+  expect(addTaskNavbarOption).toBeInTheDocument();
+  expect(listTasksNavbarOption).toBeInTheDocument();
 });
