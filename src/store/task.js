@@ -16,10 +16,6 @@ const taskStore = {
     subject.next(state);
   },
   subscribe: (setState) => subject.subscribe(setState),
-  getTasks: () => {
-    return state.tasks;
-  },
-  getStates: () => state.taskStates,
   addNote: (task) => {
     state = {
       ...state,

@@ -30,8 +30,7 @@ const validateTaskForm = (values, notes) => {
 };
 
 const TaskForm = () => {
-  const taskStates = useMemo(() => taskStore.getStates(), []);
-  const [, setTaskState] = useState({});
+  const [taskState, setTaskState] = useState({});
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
 
@@ -39,6 +38,11 @@ const TaskForm = () => {
     taskStore.subscribe(setTaskState);
     taskStore.init();
   }, []);
+
+  const taskStates = useMemo(
+    () => taskState.taskStates ?? [],
+    [taskState.taskStates]
+  );
 
   const handleAddNotes = (noteValue) => setNotes([...notes, noteValue]);
 

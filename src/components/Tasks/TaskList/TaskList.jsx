@@ -54,12 +54,9 @@ const TaskList = () => {
   }, []);
 
   useEffect(() => {
-    const data = taskStore.getTasks();
-    console.log(data);
-
-    setTasks(data);
-    sliceData(data, paginationStart, 5, setSlicedTasks);
-  }, [paginationStart, taskState]);
+    setTasks(taskState.tasks);
+    sliceData(taskState.tasks, paginationStart, 5, setSlicedTasks);
+  }, [paginationStart, taskState.tasks]);
 
   return (
     <>
