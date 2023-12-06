@@ -13,4 +13,7 @@ const getDateFromFullDateTime = (date) => {
   return year + "-" + month + "-" + day;
 };
 
-export { getLatestState, getDateFromFullDateTime };
+const findTaskIndex = (tasks, taskToModify) =>
+  tasks.findIndex((task) => task === taskToModify);
+
+export { findTaskIndex, getLatestState, getDateFromFullDateTime };

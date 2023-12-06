@@ -50,7 +50,11 @@ const Task = () => {
         </div>
         <div style={col(2)}>
           <div className="row">
-            <button type="submit" className="blue-btn" onClick={handleUpdateTask}>
+            <button
+              type="submit"
+              className="blue-btn"
+              onClick={handleUpdateTask}
+            >
               Edit
             </button>
             <button

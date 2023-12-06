@@ -3,6 +3,7 @@ import "./TaskList.css";
 import taskStore from "../../../store/task";
 import { useNavigate } from "react-router-dom";
 import {
+  findTaskIndex,
   getDateFromFullDateTime,
   getLatestState,
 } from "../../../helpers/task.helpers";
@@ -20,15 +21,13 @@ const showTaskList = (
 
     return (
       <tr key={"task-" + index}>
-        <td onClick={() => handleNavigateToTaskDetails(task, index)}>
-          {task.title}
-        </td>
+        <td onClick={() => handleNavigateToTaskDetails(task)}>{task.title}</td>
         <td>{task.dueDate}</td>
         <td>{latestState}</td>
         <td>
           {latestState !== "closed" && (
             <button
-              onClick={() => handleChangeTaskState(task, index)}
+              onClick={() => handleChangeTaskState(task)}
               className="brown-btn"
             >
               Completed
@@ -57,20 +56,19 @@ const TaskList = () => {
   const handleNextPage = () => setCurrentPage(currentPage + 1);
   const handlePreviousPage = () => setCurrentPage(currentPage - 1);
 
-  const handleNavigateToTaskDetails = (task, index) =>
+  const handleNavigateToTaskDetails = (task) =>
     navigate("/task/details", {
-      state: { ...task, index },
+      state: { ...task, index: findTaskIndex(taskState.tasks, task) },
     });
   const handleNavigateToAddNote = () => navigate("/task/create");
-  
-  const handleChangeTaskState = (task, index) => {
+  const handleChangeTaskState = (task) => {
     const newState = {
       state: "closed",
       date: getDateFromFullDateTime(new Date()),
     };
 
     task.stateHistory.push(newState);
-    taskStore.updateTask(task, index);
+    taskStore.updateTask(task, findTaskIndex(taskState.tasks, task));
   };
 
   const isTheLastPage = () =>
