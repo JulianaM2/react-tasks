@@ -45,6 +45,7 @@ const TaskForm = () => {
   );
 
   const handleAddNotes = (noteValue) => setNotes([...notes, noteValue]);
+  const handleCancel = () => navigate("/");
 
   return (
     <>
@@ -159,8 +160,9 @@ const TaskForm = () => {
                 </div>
                 <div style={col(1)}>
                   <button
+                    type="button"
                     onClick={() => handleAddNotes(values.note)}
-                    className="add-note"
+                    className="brown-btn"
                     disabled={!values.note}
                   >
                     Add
@@ -168,10 +170,20 @@ const TaskForm = () => {
                 </div>
               </div>
               <div className="row">
-                <button type="submit" disabled={isSubmitting}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="blue-btn"
+                >
                   Save
                 </button>
-                <button>Cancel</button>
+                <button
+                  type="button"
+                  className="brown-btn"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
               </div>
               <div className="row">
                 <ul>

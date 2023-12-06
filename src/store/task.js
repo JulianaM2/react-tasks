@@ -24,6 +24,16 @@ const taskStore = {
 
     subject.next(state);
   },
+  updateTask: (task, index) => {
+    state.tasks[index] = task;
+
+    state = {
+      ...state,
+      tasks: [...state.tasks],
+    };
+
+    subject.next(state);
+  },
   initialState,
 };
 

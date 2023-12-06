@@ -2,11 +2,13 @@ import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import "./TaskList.css";
 import taskStore from "../../../store/task";
 import { useNavigate } from "react-router-dom";
-import { getLatestState } from "../../../helpers/task.helpers";
+import {
+  getDateFromFullDateTime,
+  getLatestState,
+} from "../../../helpers/task.helpers";
 
-const sliceData = (tasks, page, rows, setSlicedTask) => {
-  setSlicedTask(tasks.slice((page - 1) * rows, page * rows));
-};
+const sliceData = (tasks, page, rows) =>
+  tasks.slice((page - 1) * rows, page * rows);
 
 const getPagationValues = (paginationStart, setPaginationStart) => {
   const pages = [];
@@ -28,25 +30,37 @@ const getPagationValues = (paginationStart, setPaginationStart) => {
   return pages;
 };
 
+const showTaskList = (
+  slicedTasks,
+  handleNavigateToTaskDetails,
+  handleChangeTaskState
+) =>
+  slicedTasks.map((task, index) => {
+    const latestState = getLatestState(task.stateHistory, index).state;
+    console.log(index, latestState);
+    return (
+      <tr key={"task-" + index}>
+        <td onClick={() => handleNavigateToTaskDetails(task)}>{task.title}</td>
+        <td>{task.dueDate}</td>
+        <td>{latestState}</td>
+        <td>
+          {latestState !== "closed" && (
+            <button
+              onClick={() => handleChangeTaskState(task, index)}
+              className="brown-btn"
+            >
+              Completed
+            </button>
+          )}
+        </td>
+      </tr>
+    );
+  });
+
 const TaskList = () => {
   const [paginationStart, setPaginationStart] = useState(1);
   const [taskState, setTaskState] = useState(taskStore.initialState);
-  const [tasks, setTasks] = useState([]);
-  const [slicedTasks, setSlicedTasks] = useState([]);
   const navigate = useNavigate();
-
-  useMemo(
-    () => sliceData(tasks, paginationStart, 5, setSlicedTasks),
-    [paginationStart, tasks]
-  );
-
-
-  const handleNextPage = () => setPaginationStart(paginationStart + 1);
-  const handlePreviousPage = () => setPaginationStart(paginationStart - 1);
-  const handleNavigateToTaskDetails = (task) =>
-    navigate("/task/details", {
-      state: { ...task },
-    });
 
   useLayoutEffect(() => {
     taskStore.subscribe(setTaskState);
@@ -54,37 +68,65 @@ const TaskList = () => {
   }, []);
 
   useEffect(() => {
-    setTasks(taskState.tasks);
-    sliceData(taskState.tasks, paginationStart, 5, setSlicedTasks);
+    sliceData(taskState.tasks, paginationStart, 5);
   }, [paginationStart, taskState.tasks]);
+
+  const slicedTasks = useMemo(
+    () => sliceData(taskState.tasks, paginationStart, 5),
+    [paginationStart, taskState.tasks]
+  );
+
+  const handleNextPage = () => setPaginationStart(paginationStart + 1);
+  const handlePreviousPage = () => setPaginationStart(paginationStart - 1);
+  const handleNavigateToTaskDetails = (task) =>
+    navigate("/task/details", {
+      state: { ...task },
+    });
+  const handleNavigateToAddNote = () => navigate("/task/create");
+  const handleChangeTaskState = (task, index) => {
+    const newState = {
+      state: "closed",
+      date: getDateFromFullDateTime(new Date()),
+    };
+    console.log(newState);
+    task.stateHistory.push(newState);
+    taskStore.updateTask(task, index);
+    console.log(taskState.tasks);
+  };
 
   return (
     <>
+      <div className="add-note-div">
+        <button className="brown-btn" onClick={handleNavigateToAddNote}>
+          Add note
+        </button>
+      </div>
       <table>
         <thead>
           <tr>
             <th>Title</th>
             <th>Due date</th>
             <th>State</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          {slicedTasks.map((task, index) => (
-            <tr key={"task-" + index}>
-              <td onClick={() => handleNavigateToTaskDetails(task)}>
-                {task.title}
-              </td>
-              <td>{task.dueDate}</td>
-              <td>{getLatestState(task.stateHistory).state}</td>
-            </tr>
-          ))}
+          {showTaskList(
+            slicedTasks,
+            handleNavigateToTaskDetails,
+            handleChangeTaskState
+          )}
         </tbody>
       </table>
       <div className="pagination">
         <button disabled={paginationStart === 1} onClick={handlePreviousPage}>
           &laquo;
         </button>
-        {getPagationValues(paginationStart, setPaginationStart, tasks.length)}
+        {getPagationValues(
+          paginationStart,
+          setPaginationStart,
+          taskState.tasks.length
+        )}
         <button onClick={handleNextPage}>&raquo;</button>
       </div>
     </>

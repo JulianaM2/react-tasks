@@ -16,3 +16,23 @@ code {
   display: flex;
   padding: 5px 0px;
 }
+
+.blue-btn {
+  border: none;
+  background-color: #b7c4cf;
+  margin: 0px 5px;
+  border-radius: 10px;
+  padding: 5px 20px;
+  width: fit-content;
+  color: white;
+}
+
+.brown-btn {
+  border: none;
+  background-color: #d7c0ae;
+  margin: 0px 5px;
+  border-radius: 10px;
+  padding: 5px 20px;
+  width: fit-content;
+  color: white;
+}
