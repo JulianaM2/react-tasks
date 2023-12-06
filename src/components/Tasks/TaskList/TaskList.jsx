@@ -1,20 +1,17 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import "./TaskList.css";
 import taskStore from "../../../store/task";
+import { useNavigate } from "react-router-dom";
+import { getLatestState } from "../../../helpers/task.helpers";
 
 const sliceData = (tasks, page, rows, setSlicedTask) => {
   setSlicedTask(tasks.slice((page - 1) * rows, page * rows));
 };
 
-
-const getPagationValues = (paginationStart, setPaginationStart, tasksLength) => {
+const getPagationValues = (paginationStart, setPaginationStart) => {
   const pages = [];
 
-  for (
-    let i = paginationStart;
-    i < paginationStart + 4;
-    i++
-  ) {
+  for (let i = paginationStart; i < paginationStart + 4; i++) {
     pages.push(
       <button
         className={paginationStart === i ? "active-page" : ""}
@@ -36,27 +33,33 @@ const TaskList = () => {
   const [taskState, setTaskState] = useState(taskStore.initialState);
   const [tasks, setTasks] = useState([]);
   const [slicedTasks, setSlicedTasks] = useState([]);
+  const navigate = useNavigate();
 
   useMemo(
     () => sliceData(tasks, paginationStart, 5, setSlicedTasks),
     [paginationStart, tasks]
   );
 
+
   const handleNextPage = () => setPaginationStart(paginationStart + 1);
   const handlePreviousPage = () => setPaginationStart(paginationStart - 1);
+  const handleNavigateToTaskDetails = (task) =>
+    navigate("/task/details", {
+      state: { ...task },
+    });
 
   useLayoutEffect(() => {
-    taskStore.subscribe();
+    taskStore.subscribe(setTaskState);
     taskStore.init();
   }, []);
 
   useEffect(() => {
     const data = taskStore.getTasks();
+    console.log(data);
 
     setTasks(data);
     sliceData(data, paginationStart, 5, setSlicedTasks);
-  }, [paginationStart]);
-
+  }, [paginationStart, taskState]);
 
   return (
     <>
@@ -71,9 +74,11 @@ const TaskList = () => {
         <tbody>
           {slicedTasks.map((task, index) => (
             <tr key={"task-" + index}>
-              <td>{task.title}</td>
+              <td onClick={() => handleNavigateToTaskDetails(task)}>
+                {task.title}
+              </td>
               <td>{task.dueDate}</td>
-              <td>{task.state}</td>
+              <td>{getLatestState(task.stateHistory).state}</td>
             </tr>
           ))}
         </tbody>

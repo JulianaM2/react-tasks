@@ -11,10 +11,22 @@ const initialState = {
 let state = initialState;
 
 const taskStore = {
-  init: () => subject.next(state),
+  init: () => {
+    state = { ...state };
+    subject.next(state);
+  },
   subscribe: (setState) => subject.subscribe(setState),
   getTasks: () => {
     return state.tasks;
+  },
+  getStates: () => state.taskStates,
+  addNote: (task) => {
+    state = {
+      ...state,
+      tasks: [...state.tasks, task],
+    };
+
+    subject.next(state);
   },
   initialState,
 };

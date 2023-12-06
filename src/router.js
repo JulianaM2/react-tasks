@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Task from "./components/Tasks/Task/Task";
 import TaskList from "./components/Tasks/TaskList/TaskList";
+import TaskForm from "./components/Tasks/TaskForm/TaskForm";
 
 const router = createBrowserRouter([
   {
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
   {
     path: '/task/details',
     element: <Task />
+  },
+  {
+    path: '/task/create',
+    element: <TaskForm />
   }
 ]);
 
