@@ -59,14 +59,15 @@ const handleSubmit = (values, notes, navigate, taskToUpdate) => {
     title: values.title,
     description: values.description,
     dueDate: values.dueDate,
+    stateHistory: taskToUpdate
+      ? [...taskToUpdate?.stateHistory, state]
+      : [state],
     notes,
   };
 
   if (taskToUpdate) {
-    task.stateHistory.push(state);
     taskStore.updateTask(task, taskToUpdate.index);
   } else {
-    task.stateHistory = [state];
     taskStore.addNote(task);
   }
 
