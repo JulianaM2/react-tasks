@@ -85,7 +85,9 @@ const TaskForm = () => {
                     onChange={handleChange}
                     value={values.title}
                   />
-                  {errors.title && touched.title && errors.title}
+                  <span className="field-required">
+                    {errors.title && touched.title && errors.title}
+                  </span>
                 </div>
               </div>
               <div className="row">
@@ -97,9 +99,11 @@ const TaskForm = () => {
                     onChange={handleChange}
                     value={values.description}
                   />
-                  {errors.description &&
-                    touched.description &&
-                    errors.description}
+                  <span className="field-required">
+                    {errors.description &&
+                      touched.description &&
+                      errors.description}
+                  </span>
                 </div>
               </div>
               <div className="row">
@@ -111,7 +115,9 @@ const TaskForm = () => {
                     onChange={handleChange}
                     value={values.dueDate}
                   />
-                  {errors.dueDate && touched.dueDate && errors.dueDate}
+                  <span className="field-required">
+                    {errors.dueDate && touched.dueDate && errors.dueDate}
+                  </span>
                 </div>
               </div>
               <div className="row">
@@ -129,7 +135,9 @@ const TaskForm = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.state && touched.state && errors.state}
+                  <span className="field-required">
+                    {errors.state && touched.state && errors.state}
+                  </span>
                 </div>
               </div>
               <div className="row">
@@ -141,7 +149,9 @@ const TaskForm = () => {
                     onChange={handleChange}
                     value={values.note}
                   />
-                  {errors.note && touched.note && errors.note}
+                  <span className="field-required">
+                    {errors.note && touched.note && errors.note}
+                  </span>
                 </div>
                 <div style={col(1)}>
                   <button

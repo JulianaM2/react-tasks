@@ -11,3 +11,8 @@
   width: fit-content;
   color: white;
 }
+
+.field-required {
+  color: red;
+  font-size: 13px;
+}
