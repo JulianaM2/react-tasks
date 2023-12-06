@@ -2,14 +2,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { STATE_COLORS } from "../../../constants/common.constants";
 import { badgeColor, col } from "../../../styles/global.styles";
 import "./Task.css";
-import { useEffect, useMemo } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { getLatestState } from "../../../helpers/task.helpers";
+import taskStore from "../../../store/task";
 
 const Task = () => {
+  const [taskState, setTaskState] = useState(taskStore.initialState);
+
+  useLayoutEffect(() => {
+    taskStore.subscribe(setTaskState);
+    taskStore.init();
+  }, []);
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { title, description, dueDate, stateHistory, notes } = location.state;
+  const { title, description, dueDate, stateHistory, notes, index } =
+    location.state;
 
   const state = useMemo(
     () => getLatestState(stateHistory).state,
@@ -22,11 +31,36 @@ const Task = () => {
     }
   }, [location, navigate]);
 
+  const handleDeleteTask = () => {
+    taskStore.deleteTask(index);
+    navigate("/");
+  };
+
+  const handleUpdateTask = () => {
+    navigate("/task/create", {
+      state: { ...location.state },
+    });
+  };
+
   return (
     <>
       <div className="row">
-        <div style={col(6)}>
+        <div style={col(4)}>
           <span className="task-title">{title}</span>
+        </div>
+        <div style={col(2)}>
+          <div className="row">
+            <button type="submit" className="blue-btn" onClick={handleUpdateTask}>
+              Edit
+            </button>
+            <button
+              type="button"
+              className="brown-btn"
+              onClick={handleDeleteTask}
+            >
+              Delete
+            </button>
+          </div>
         </div>
         <div style={col(2)}>
           <span className="badge" style={badgeColor(STATE_COLORS[state])}>

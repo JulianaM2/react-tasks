@@ -37,10 +37,10 @@ const showTaskList = (
 ) =>
   slicedTasks.map((task, index) => {
     const latestState = getLatestState(task.stateHistory, index).state;
-    console.log(index, latestState);
+
     return (
       <tr key={"task-" + index}>
-        <td onClick={() => handleNavigateToTaskDetails(task)}>{task.title}</td>
+        <td onClick={() => handleNavigateToTaskDetails(task, index)}>{task.title}</td>
         <td>{task.dueDate}</td>
         <td>{latestState}</td>
         <td>
@@ -74,9 +74,9 @@ const TaskList = () => {
 
   const handleNextPage = () => setPaginationStart(paginationStart + 1);
   const handlePreviousPage = () => setPaginationStart(paginationStart - 1);
-  const handleNavigateToTaskDetails = (task) =>
+  const handleNavigateToTaskDetails = (task, index) =>
     navigate("/task/details", {
-      state: { ...task },
+      state: { ...task, index, },
     });
   const handleNavigateToAddNote = () => navigate("/task/create");
   const handleChangeTaskState = (task, index) => {

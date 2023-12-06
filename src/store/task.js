@@ -34,6 +34,16 @@ const taskStore = {
 
     subject.next(state);
   },
+  deleteTask: (index) => {
+    state.tasks.splice(index, 1);
+
+    state = {
+      ...state,
+      tasks: [...state.tasks],
+    };
+
+    subject.next(state);
+  },
   initialState,
 };
 

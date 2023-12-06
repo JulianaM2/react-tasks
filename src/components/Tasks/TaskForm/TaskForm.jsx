@@ -3,7 +3,11 @@ import { col } from "../../../styles/global.styles";
 import "./TaskForm.css";
 import { useLayoutEffect, useMemo, useState } from "react";
 import taskStore from "../../../store/task";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  getDateFromFullDateTime,
+  getLatestState,
+} from "../../../helpers/task.helpers";
 
 const validate = (value, field, errors) => {
   if (!value) {
@@ -29,10 +33,54 @@ const validateTaskForm = (values, notes) => {
   return errors;
 };
 
+const setInitialValues = (task) => {
+  let latestState = "";
+
+  if (task?.stateHistory) {
+    latestState = getLatestState(task.stateHistory).state;
+  }
+
+  return {
+    title: task?.title || "",
+    description: task?.description || "",
+    dueDate: task?.dueDate || "",
+    state: latestState,
+    note: "",
+  };
+};
+
+const handleSubmit = (values, notes, navigate, taskToUpdate) => {
+  const state = {
+    state: values.state,
+    date: getDateFromFullDateTime(new Date()),
+  };
+
+  const task = {
+    title: values.title,
+    description: values.description,
+    dueDate: values.dueDate,
+    notes,
+  };
+
+  if (taskToUpdate) {
+    task.stateHistory.push(state);
+    taskStore.updateTask(task, taskToUpdate.index);
+  } else {
+    task.stateHistory = [state];
+    taskStore.addNote(task);
+  }
+
+  navigate("/");
+};
+
 const TaskForm = () => {
   const [taskState, setTaskState] = useState({});
-  const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const task = location.state;
+
+  const [notes, setNotes] = useState(task?.notes || []);
 
   useLayoutEffect(() => {
     taskStore.subscribe(setTaskState);
@@ -50,26 +98,9 @@ const TaskForm = () => {
   return (
     <>
       <Formik
-        initialValues={{
-          title: "",
-          description: "",
-          dueDate: "",
-          state: "",
-          note: "",
-        }}
+        initialValues={setInitialValues(task)}
         validate={(values) => validateTaskForm(values, notes)}
-        onSubmit={(values) => {
-          const task = {
-            title: values.title,
-            description: values.description,
-            dueDate: values.dueDate,
-            stateHistory: [{ state: values.state, date: new Date() }],
-            notes,
-          };
-
-          taskStore.addNote(task);
-          navigate("/");
-        }}
+        onSubmit={(values) => handleSubmit(values, notes, navigate, task)}
       >
         {({
           values,
