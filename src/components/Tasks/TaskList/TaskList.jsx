@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import "./TaskList.css";
 import taskStore from "../../../store/task";
 import { useNavigate } from "react-router-dom";
@@ -66,10 +66,6 @@ const TaskList = () => {
     taskStore.subscribe(setTaskState);
     taskStore.init();
   }, []);
-
-  useEffect(() => {
-    sliceData(taskState.tasks, paginationStart, 5);
-  }, [paginationStart, taskState.tasks]);
 
   const slicedTasks = useMemo(
     () => sliceData(taskState.tasks, paginationStart, 5),
